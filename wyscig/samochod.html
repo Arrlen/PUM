@@ -2,12 +2,12 @@
 <script>
 var score=0;
 var maxscore=0;
-var gameSpeed = 3;
+var gameSpeed = 5;
 var x=7;
 var lineWidth = 30
 var lineHeight = 30
 var linesProgress = 0
-const linesProgressDelta = 5
+
 class Utils {
   static random(max, min = 0) {
     return Math.random() * (max - min) + min;
@@ -49,7 +49,7 @@ class Car {
 function drawScore() {
   context.font = "20px Arial";
   context.fillStyle = "white";
-  context.fillText("Score: "+score, 8, 20);
+  context.fillText("Score: "+score, 40, 20);
 }
 function whiteline(){
     context.beginPath()
@@ -87,7 +87,7 @@ function whiteline(){
         context.fill()
         context.closePath()
     }
-    linesProgress += linesProgressDelta
+    linesProgress += gameSpeed
     if (linesProgress > canvas.height-500) {
         linesProgress -= canvas.height
     }
@@ -164,6 +164,9 @@ function loop() {
   clearCanvas();
   context.fillStyle="grey";
   context.fillRect(0,0,800,600);
+  context.fillStyle="white";
+  context.fillRect(0,0,30,600);
+  context.fillRect(770,0,30,600);
   drawScore();
   setInterval(() => {
    x=x*(-1);
@@ -173,7 +176,7 @@ function loop() {
     otherCar = cars[i];
     otherCar.move(otherCar.x, otherCar.y + gameSpeed);
     if (otherCar.y > canvas.height) {
-      otherCar.move(Utils.random(canvas.width), -Utils.random(canvas.height));
+      otherCar.move(Utils.random(canvas.width-50), -Utils.random(canvas.height));
     }
     otherCar.draw();
     

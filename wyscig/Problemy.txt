@@ -1,1 +1,2 @@
 Problemy z płynnością animacji podłoża nie zostały rozwiązane
+v2 Problemy z płynnością animacji podłoża zostały naprawione
