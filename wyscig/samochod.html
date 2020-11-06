@@ -4,6 +4,10 @@ var score=0;
 var maxscore=0;
 var gameSpeed = 3;
 var x=7;
+var lineWidth = 30
+var lineHeight = 30
+var linesProgress = 0
+const linesProgressDelta = 5
 class Utils {
   static random(max, min = 0) {
     return Math.random() * (max - min) + min;
@@ -46,16 +50,48 @@ function drawScore() {
   context.font = "20px Arial";
   context.fillStyle = "white";
   context.fillText("Score: "+score, 8, 20);
-  context.fillText("MaxScore: "+maxscore, 100, 20);
 }
 function whiteline(){
-context.fillStyle="white";
-var i=0;
-for(i=0;i<20;i++){
-context.fillRect(400,((32+x)*i),20,15);
+    context.beginPath()
+    context.rect(canvas.width * 0.25, 0, canvas.width * 0.5, canvas.height)
+    context.fillStyle = "grey"
+    context.fill()
+    context.closePath()
+    for (let i = 0; ; i++) {
+        context.beginPath()
+        context.rect(canvas.width * 0.5 - lineWidth * 0.5, linesProgress + i * 100, lineWidth, lineHeight)
+        if (linesProgress + i * 20 > canvas.height) {
+            break
+        }
+        context.fillStyle = "white"
+        context.fill()
+        context.closePath()
+    }
+    for (let i = 0; ; i++) {
+        context.beginPath()
+        context.rect(canvas.width * 0.02 - lineWidth * 0.5, linesProgress + i * 100, lineWidth, lineHeight)
+        if (linesProgress + i * 20 > canvas.height) {
+            break
+        }
+        context.fillStyle = "red"
+        context.fill()
+        context.closePath()
+    }
+    for (let i = 0; ; i++) {
+        context.beginPath()
+        context.rect(canvas.width * 0.98 - lineWidth * 0.5, linesProgress + i * 100, lineWidth, lineHeight)
+        if (linesProgress + i * 20 > canvas.height) {
+            break
+        }
+        context.fillStyle = "red"
+        context.fill()
+        context.closePath()
+    }
+    linesProgress += linesProgressDelta
+    if (linesProgress > canvas.height-500) {
+        linesProgress -= canvas.height
+    }
 }
-}
-
 
 
 function clearCanvas() {
