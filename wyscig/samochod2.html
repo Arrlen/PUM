@@ -1,4 +1,15 @@
-<canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+<html>
+<body>
+<div>
+    <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+        Your browser does not support the HTML canvas tag.
+    </canvas>
+</div>
+<div>
+    <button id="leftButton" style="border-radius: 50%; height: 60px; width: 60px; background-color: #FF5252; color: blue; margin-left: 50px" ><-</button>
+    <button id="rightButton" style=" border-radius: 50%; height: 60px; width: 60px; ;background-color: #FF5252; color: blue; margin-left: 600px" >-></button>
+
+</div>
 <script>
 var score=0;
 var maxscore=0;
@@ -7,6 +18,8 @@ var x=7;
 var lineWidth = 30
 var lineHeight = 30
 var linesProgress = 0
+var leftButton = document.getElementById("leftButton");
+var rightButton = document.getElementById("rightButton");
 
 class Utils {
   static random(max, min = 0) {
@@ -46,6 +59,32 @@ class Car {
     context.drawImage(imageObj, this.x, this.y, this.width, this.height);
   }
 }
+
+function handleLeft() {
+    moveLeft = true;
+    car.velocityX--;
+}
+function handleRight() {
+    moveRight = true;
+    car.velocityX++;
+}
+
+function handleLeftEnd() {
+    moveLeft = false;
+}
+function handleRightEnd() {
+    moveRight = false;
+}
+
+
+
+leftButton.addEventListener('click', handleLeft, false);
+leftButton.addEventListener('touchend', handleLeftEnd, false);
+
+rightButton.addEventListener('click', handleRight, false);
+rightButton.addEventListener('touchend', handleRightEnd, false);
+
+
 function drawScore() {
   context.font = "20px Arial";
   context.fillStyle = "white";
@@ -201,6 +240,8 @@ function loop() {
 loop();
 </script>
 </canvas>
+</body>
+</html>
 
 
 
