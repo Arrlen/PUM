@@ -62,11 +62,16 @@ class Car {
 
 function handleLeft() {
     moveLeft = true;
-    car.velocityX--;
+    if (car.velocityX > -car.speed) {
+        car.velocityX=car.velocityX-9;
+    }
+
 }
 function handleRight() {
     moveRight = true;
-    car.velocityX++;
+    if (car.velocityX < car.speed) {
+        car.velocityX=car.velocityX+9;
+    }
 }
 
 function handleLeftEnd() {
@@ -80,10 +85,11 @@ function handleRightEnd() {
 
 leftButton.addEventListener('touchstart', handleLeft, false);
 leftButton.addEventListener('touchend', handleLeftEnd, false);
+leftButton.addEventListener('click', handleLeft, false);
 
 rightButton.addEventListener('touchstart', handleRight, false);
 rightButton.addEventListener('touchend', handleRightEnd, false);
-
+rightButton.addEventListener('click', handleRight, false);
 
 function drawScore() {
   context.font = "20px Arial";

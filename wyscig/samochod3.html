@@ -1,4 +1,15 @@
-<canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+<html>
+<body>
+<div>
+    <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+        Your browser does not support the HTML canvas tag.
+    </canvas>
+</div>
+<div>
+    <button id="leftButton" style="border-radius: 50%; height: 60px; width: 60px; background-color: #FF5252; color: blue; margin-left: 50px" ><-</button>
+    <button id="rightButton" style=" border-radius: 50%; height: 60px; width: 60px; ;background-color: #FF5252; color: blue; margin-left: 600px" >-></button>
+
+</div>
 <script>
 var score=0;
 var maxscore=0;
@@ -7,7 +18,10 @@ var x=7;
 var lineWidth = 30
 var lineHeight = 30
 var linesProgress = 0
-
+var leftButton = document.getElementById("leftButton");
+var rightButton = document.getElementById("rightButton");
+var vec=score;
+var dir=1;
 class Utils {
   static random(max, min = 0) {
     return Math.random() * (max - min) + min;
@@ -46,6 +60,38 @@ class Car {
     context.drawImage(imageObj, this.x, this.y, this.width, this.height);
   }
 }
+
+function handleLeft() {
+    moveLeft = true;
+    if (car.velocityX > -car.speed) {
+        car.velocityX=car.velocityX-9;
+    }
+
+}
+function handleRight() {
+    moveRight = true;
+    if (car.velocityX < car.speed) {
+        car.velocityX=car.velocityX+9;
+    }
+}
+
+function handleLeftEnd() {
+    moveLeft = false;
+}
+function handleRightEnd() {
+    moveRight = false;
+}
+
+
+
+leftButton.addEventListener('touchstart', handleLeft, false);
+leftButton.addEventListener('touchend', handleLeftEnd, false);
+leftButton.addEventListener('click', handleLeft, false);
+
+rightButton.addEventListener('touchstart', handleRight, false);
+rightButton.addEventListener('touchend', handleRightEnd, false);
+rightButton.addEventListener('click', handleRight, false);
+
 function drawScore() {
   context.font = "20px Arial";
   context.fillStyle = "white";
@@ -59,8 +105,8 @@ function whiteline(){
     context.closePath()
     for (let i = 0; ; i++) {
         context.beginPath()
-        context.rect(canvas.width * 0.5 - lineWidth * 0.5, linesProgress + i * 100, lineWidth, lineHeight)
-        if (linesProgress + i * 20 > canvas.height) {
+        context.rect((canvas.width * 0.5 - lineWidth * 0.5)-(vec*-20*dir), linesProgress + i * 100, lineWidth, lineHeight)
+        if (linesProgress + i * 5 > canvas.height) {
             break
         }
         context.fillStyle = "white"
@@ -69,7 +115,7 @@ function whiteline(){
     }
     for (let i = 0; ; i++) {
         context.beginPath()
-        context.rect(canvas.width * 0.02 - lineWidth * 0.5, linesProgress + i * 100, lineWidth, lineHeight)
+        context.rect((canvas.width * 0.02 - lineWidth * 0.5)+vec*20, linesProgress + i * 100, lineWidth, lineHeight)
         if (linesProgress + i * 20 > canvas.height) {
             break
         }
@@ -79,7 +125,7 @@ function whiteline(){
     }
     for (let i = 0; ; i++) {
         context.beginPath()
-        context.rect(canvas.width * 0.98 - lineWidth * 0.5, linesProgress + i * 100, lineWidth, lineHeight)
+        context.rect((canvas.width * 0.98 - lineWidth * 0.5)-vec*20, linesProgress + i * 100, lineWidth, lineHeight)
         if (linesProgress + i * 20 > canvas.height) {
             break
         }
@@ -122,6 +168,21 @@ let otherCar;
 setInterval(() => {
   gameSpeed += 2;
   score++;
+  vec++;
+    if(vec>6){
+        vec=6;
+    }
+    if(vec==6){
+        vec=0;
+        dir=dir*-1;
+    }
+    if(vec<-6){
+        vec=-6;
+    }
+    if(vec==-6){
+        vec=0;
+        dir=dir*-1;
+    }
   if(maxscore<score){
    maxscore=score;
   }
@@ -164,10 +225,14 @@ function loop() {
   clearCanvas();
   context.fillStyle="grey";
   context.fillRect(0,0,800,600);
-  context.fillStyle="white";
-  context.fillRect(0,0,30,600);
-  context.fillRect(770,0,30,600);
-  drawScore();
+    context.fillStyle="grey";
+    context.fillRect(vec*20,0,30,600);
+    context.fillRect(770-vec*20,0,30,600);
+    context.fillStyle="white";
+  context.fillRect(vec*20,0,30,600);
+  context.fillRect(770-vec*20,0,30,600);
+
+    drawScore();
   setInterval(() => {
    x=x*(-1);
 }, 300);
@@ -190,7 +255,9 @@ function loop() {
       gameSpeed = 0;
 	  if(maxscore<score){
 	  maxscore=score;
-	  }
+      }
+	  dir=dir*-1;
+	  vec=0;
 	  score=0;
     }
   }
@@ -201,6 +268,8 @@ function loop() {
 loop();
 </script>
 </canvas>
+</body>
+</html>
 
 
 
