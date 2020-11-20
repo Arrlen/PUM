@@ -142,6 +142,7 @@ function whiteline(){
 
 function clearCanvas() {
   context.clearRect(0, 0, canvas.width, canvas.height);
+
 }
 
 const car = new Car(canvas, context, "black");
@@ -168,21 +169,6 @@ let otherCar;
 setInterval(() => {
   gameSpeed += 2;
   score++;
-  vec++;
-    if(vec>6){
-        vec=6;
-    }
-    if(vec==6){
-        vec=0;
-        dir=dir*-1;
-    }
-    if(vec<-6){
-        vec=-6;
-    }
-    if(vec==-6){
-        vec=0;
-        dir=dir*-1;
-    }
   if(maxscore<score){
    maxscore=score;
   }
@@ -219,20 +205,34 @@ function  updatePlayerCar() {
   car.draw();
 }
 
-
+var x=0;
 function loop() {
   requestAnimationFrame(loop);
+  x++;
   clearCanvas();
+  if(x==30){
+      context.setTransform(0.8, 0, 0.08, 1, 0, 0);
+  }else
+  if(x==50 || x==90||x==-20){
+        context.setTransform(1, 0, 0, 1, 0, 0);
+  }else
+  if(x==70){
+      context.setTransform(0.95, 0, -0.08, 1, 0, 0);
+      x=-20;
+  }
+
   context.fillStyle="grey";
   context.fillRect(0,0,800,600);
+    context.fillStyle="grey";
+    context.fillRect(-200,0,2000,2000);
     context.fillStyle="grey";
     context.fillRect(vec*20,0,30,600);
     context.fillRect(770-vec*20,0,30,600);
     context.fillStyle="white";
   context.fillRect(vec*20,0,30,600);
   context.fillRect(770-vec*20,0,30,600);
-
     drawScore();
+
   setInterval(() => {
    x=x*(-1);
 }, 300);
@@ -244,7 +244,7 @@ function loop() {
       otherCar.move(Utils.random(canvas.width-100), -Utils.random(canvas.height));
     }
     otherCar.draw();
-    
+
     if (
       otherCar.y + otherCar.height > car.y &&
       (
