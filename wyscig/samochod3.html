@@ -8,7 +8,6 @@
 <div>
     <button id="leftButton" style="border-radius: 50%; height: 60px; width: 60px; background-color: #FF5252; color: blue; margin-left: 50px" ><-</button>
     <button id="rightButton" style=" border-radius: 50%; height: 60px; width: 60px; ;background-color: #FF5252; color: blue; margin-left: 600px" >-></button>
-
 </div>
 <script>
 var score=0;
@@ -213,13 +212,15 @@ function loop() {
   if(x==30){
       context.setTransform(0.8, 0, 0.08, 1, 0, 0);
   }else
-  if(x==50 || x==90||x==-20){
+  if(x==0  || x==60){
         context.setTransform(1, 0, 0, 1, 0, 0);
-  }else
-  if(x==70){
+    }else
+  if(x==80){
       context.setTransform(0.95, 0, -0.08, 1, 0, 0);
-      x=-20;
+      x=-10;
   }
+
+
 
   context.fillStyle="grey";
   context.fillRect(0,0,800,600);
