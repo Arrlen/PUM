@@ -217,15 +217,15 @@ function loop() {
   requestAnimationFrame(loop);
   x++;
   clearCanvas();
-  if(x==30){
+  if(x==40){
       context.setTransform(0.8, 0, 0.08, 1, 0, 0);
   }else
-  if(x==0  || x==60){
+  if(x==0  || x==70){
         context.setTransform(1, 0, 0, 1, 0, 0);
     }else
-  if(x==80){
+  if(x==90){
       context.setTransform(0.95, 0, -0.08, 1, 0, 0);
-      x=-10;
+      x=-5;
   }
 
 
