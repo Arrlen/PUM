@@ -21,8 +21,6 @@ var x=7;
 var lineWidth = 30
 var lineHeight = 30
 var linesProgress = 0
-var leftButton = document.getElementById("leftButton");
-var rightButton = document.getElementById("rightButton");
 var vec=score;
 var dir=1;
 class Utils {
@@ -243,8 +241,6 @@ function loop() {
       context.setTransform(0.95, 0, -0.08, 1, 0, 0);
       x=-5;
   }
-
-
 
   context.fillStyle="grey";
   context.fillRect(0,0,800,600);
