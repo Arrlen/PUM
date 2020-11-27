@@ -146,12 +146,12 @@ function handleOrientation(event) {
 
     if (m >  90) { m =  90};
     if (m < -90) { m = -90};
-    if (n>5) {
+    if (n>3) {
         if (car.velocityX > -car.speed) {
             car.velocityX--;
         }
     }
-    if (n<-5) {
+    if (n<-3) {
         if (car.velocityX < car.speed) {
             car.velocityX++;
         }
