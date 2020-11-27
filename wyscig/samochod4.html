@@ -151,13 +151,32 @@ function clearCanvas() {
   context.clearRect(0, 0, canvas.width, canvas.height);
 
 }
-let acl = new Accelerometer({frequency: 60});
 
-acl.addEventListener('reading', () => {
-    console.log("Acceleration along the X-axis " + acl.x);
-});
-acl.start();
+function handleOrientation(event) {
+    var m = event.beta;  // In degree in the range [-180,180]
+    var n = event.gamma; // In degree in the range [-90,90]
 
+
+    if (m >  90) { m =  90};
+    if (m < -90) { m = -90};
+    if (m>0) {
+        if (car.velocityX > -car.speed) {
+            car.velocityX--;
+        }
+    }
+    if (m<0) {
+        if (car.velocityX < car.speed) {
+            car.velocityX++;
+        }
+    }
+
+    m += 90;
+    n += 90;
+
+
+}
+
+window.addEventListener('deviceorientation', handleOrientation);
 const car = new Car(canvas, context, "black");
 car.draw();
 const keys  =  {};
@@ -205,16 +224,7 @@ function  updatePlayerCar() {
       car.velocityX++;
     }
   }
-    if(acl.x>0){
-        if (car.velocityX > -car.speed) {
-            car.velocityX++;
-        }
-    }
-    if(acl.x<0){
-        if (car.velocityX > -car.speed) {
-            car.velocityX--;
-        }
-    }
+
   car.velocityX *= car.friction;
   car.x +=  car.velocityX;
   
