@@ -13,10 +13,6 @@
         Your browser does not support the HTML canvas tag.
     </canvas>
 </div>
-<div>
-    <button id="leftButton" style="border-radius: 50%; height: 60px; width: 60px; background-color: #FF5252; color: blue; margin-left: 50px" ><-</button>
-    <button id="rightButton" style=" border-radius: 50%; height: 60px; width: 60px; ;background-color: #FF5252; color: blue; margin-left: 600px" >-></button>
-</div>
 <script>
 var score=0;
 var maxscore=0;
@@ -91,13 +87,6 @@ function handleRightEnd() {
 
 
 
-leftButton.addEventListener('touchstart', handleLeft, false);
-leftButton.addEventListener('touchend', handleLeftEnd, false);
-leftButton.addEventListener('click', handleLeft, false);
-
-rightButton.addEventListener('touchstart', handleRight, false);
-rightButton.addEventListener('touchend', handleRightEnd, false);
-rightButton.addEventListener('click', handleRight, false);
 
 function drawScore() {
   context.font = "20px Arial";
@@ -159,17 +148,19 @@ function handleOrientation(event) {
 
     if (m >  90) { m =  90};
     if (m < -90) { m = -90};
-    if (n>0) {
+    if (n>15) {
         if (car.velocityX > -car.speed) {
             car.velocityX--;
         }
     }
-    if (n<0) {
+    if (n<-15) {
         if (car.velocityX < car.speed) {
             car.velocityX++;
         }
     }
-
+    if (m>60) {
+       gameSpeed=m/10;
+    }
     m += 90;
     n += 90;
 
