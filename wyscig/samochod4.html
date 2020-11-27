@@ -159,17 +159,22 @@ function handleOrientation(event) {
 
     if (m >  90) { m =  90};
     if (m < -90) { m = -90};
-    if (m>0) {
+    if (n>0) {
         if (car.velocityX > -car.speed) {
             car.velocityX--;
         }
     }
-    if (m<0) {
+    if (n<0) {
         if (car.velocityX < car.speed) {
             car.velocityX++;
         }
     }
+    if(m>20){
+        gameSpeed=m/10;
+    }
+    if(m<-50){
 
+    }
     m += 90;
     n += 90;
 
