@@ -8,9 +8,21 @@
     <a href="wyscig/samochod2.html">Wyscig 2</a>
     <p></p>
     <a href="wyscig/samochod3.html">Wyscig 3</a>
+    <p></p>
+    <a href="wyscig/samochod4.html">Wyscig 4</a>
 
 </head>
 <body>
+<script>
+    let acl = new Accelerometer({frequency: 60});
 
+    acl.addEventListener('reading', () => {
+        console.log("Acceleration along the X-axis " + acl.x);
+        console.log("Acceleration along the Y-axis " + acl.y);
+        console.log("Acceleration along the Z-axis " + acl.z);
+    });
+
+    acl.start();
+</script>
 </body>
 </html>
