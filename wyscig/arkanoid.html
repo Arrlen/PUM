@@ -140,11 +140,6 @@
             }
         }
     }
-    function drawScore() {
-        ctx.font = "16px Arial";
-        ctx.fillStyle = "#00dd37";
-        ctx.fillText("Score: "+score, 8, 20);
-    }
     function handleOrientation(event) {
         var m = event.beta;  // In degree in the range [-180,180]
         var n = event.gamma; // In degree in the range [-90,90]
@@ -169,6 +164,11 @@
 
     }
     window.addEventListener('deviceorientation', handleOrientation);
+    function drawScore() {
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#00dd37";
+        ctx.fillText("Score: "+score, 8, 20);
+    }
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBricks();
