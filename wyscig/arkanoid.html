@@ -148,12 +148,12 @@
         if (m >  90) { m =  90};
         if (m < -90) { m = -90};
         if (n>3) {
-            if (rightPressed && paddleX < canvas.width-paddleWidth) {
+            if (paddleX < canvas.width-paddleWidth) {
                 paddleX += 7;
             }
         }
         if (n<-3) {
-            if (leftPressed && paddleX > 0) {
+            if (paddleX > 0) {
                 paddleX -= 7;
             }
         }
