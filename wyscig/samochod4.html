@@ -9,6 +9,9 @@
 </head>
 <body>
 <div>
+    <button id="request">orientation permission</button>
+</div>
+<div>
     <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
         Your browser does not support the HTML canvas tag.
     </canvas>
@@ -28,7 +31,8 @@ class Utils {
     return Math.random() * (max - min) + min;
   }
 }
-
+const btn = document.getElementById( "request" );
+btn.addEventListener( "click", permission );
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext("2d");
 context.fillStyle="grey";
@@ -38,6 +42,24 @@ imageObj.onload = function() {
   context.drawImage(imageObj, this.x, this.y, this.width, this.height);
 };
 imageObj.src = 'car.png';
+if ( location.protocol !== "https:" ) {
+    location.href = "https:" + window.location.href.substring( window.location.protocol.length );
+}
+function permission () {
+    if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
+        DeviceMotionEvent.requestPermission()
+            .then( response => {
+                if ( response === "granted" ) {
+                    window.addEventListener("deviceorientation", handleOrientation, true);
+                }
+            })
+            .catch( console.error )
+    } else {
+        alert( "DeviceMotionEvent is not defined" );
+    }
+}
+const permit = document.getElementById( "request" );
+permit.addEventListener( "click", permission );
 
 class Car {
   constructor(canvas, context, color) {
