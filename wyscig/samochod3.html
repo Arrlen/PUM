@@ -141,7 +141,7 @@ function whiteline(){
         context.closePath()
     }
     linesProgress += gameSpeed
-    if (linesProgress > canvas.height-650) {
+    if (linesProgress > canvas.height-500) {
         linesProgress -= canvas.height
     }
 }
@@ -239,7 +239,7 @@ function loop() {
     context.fillRect(770-vec*20,0,30,600);
     context.fillStyle="white";
   context.fillRect(vec*20,0,30,800);
-  context.fillRect(570-vec*20,0,30,800);
+  context.fillRect(770-vec*20,0,30,600);
     drawScore();
 
   setInterval(() => {

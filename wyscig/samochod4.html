@@ -12,7 +12,7 @@
     <button id="request">orientation permission</button>
 </div>
 <div>
-    <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+    <canvas id="myCanvas" width="600" height="800" style="border:1px solid #000000;">
         Your browser does not support the HTML canvas tag.
     </canvas>
 </div>
@@ -150,7 +150,7 @@ function whiteline(){
         context.closePath()
     }
     linesProgress += gameSpeed
-    if (linesProgress > canvas.height-500) {
+    if (linesProgress > canvas.height-650) {
         linesProgress -= canvas.height
     }
 }
@@ -275,8 +275,8 @@ function loop() {
     context.fillRect(vec*20,0,30,600);
     context.fillRect(770-vec*20,0,30,600);
     context.fillStyle="white";
-  context.fillRect(vec*20,0,30,600);
-  context.fillRect(770-vec*20,0,30,600);
+  context.fillRect(vec*20,0,30,800);
+  context.fillRect(570-vec*20,0,30,800);
     drawScore();
 
   setInterval(() => {
