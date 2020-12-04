@@ -15,7 +15,7 @@
 </div>
 <div>
     <button id="leftButton" style="border-radius: 50%; height: 60px; width: 60px; background-color: #FF5252; color: blue; margin-left: 50px" ><-</button>
-    <button id="rightButton" style=" border-radius: 50%; height: 60px; width: 60px; ;background-color: #FF5252; color: blue; margin-left: 600px" >-></button>
+    <button id="rightButton" style=" border-radius: 50%; height: 60px; width: 60px; ;background-color: #FF5252; color: blue; margin-left: 400px" >-></button>
 </div>
 <script>
 var score=0;
@@ -141,7 +141,7 @@ function whiteline(){
         context.closePath()
     }
     linesProgress += gameSpeed
-    if (linesProgress > canvas.height-500) {
+    if (linesProgress > canvas.height-650) {
         linesProgress -= canvas.height
     }
 }
@@ -231,15 +231,15 @@ function loop() {
 
 
   context.fillStyle="grey";
-  context.fillRect(0,0,800,600);
+  context.fillRect(0,0,600,800);
     context.fillStyle="grey";
     context.fillRect(-200,0,2000,2000);
     context.fillStyle="grey";
     context.fillRect(vec*20,0,30,600);
     context.fillRect(770-vec*20,0,30,600);
     context.fillStyle="white";
-  context.fillRect(vec*20,0,30,600);
-  context.fillRect(770-vec*20,0,30,600);
+  context.fillRect(vec*20,0,30,800);
+  context.fillRect(570-vec*20,0,30,800);
     drawScore();
 
   setInterval(() => {
