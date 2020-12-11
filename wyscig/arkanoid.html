@@ -39,7 +39,7 @@
     permit.addEventListener( "click", permission );
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
-    ctx.scale(0.3, 0.3);
+    ctx.scale(0.25, 0.25);
     var ballRadius = 10;
     var x = canvas.width/2;
     var y = canvas.height-30;
@@ -55,7 +55,7 @@
     var brickWidth = 75;
     var brickHeight = 20;
     var brickPadding = 10;
-    var brickOffsetTop = 100;
+    var brickOffsetTop = 30;
     var brickOffsetLeft = 45;
     var score = 0;
     var lives = 1;
@@ -148,12 +148,12 @@
 
         if (m >  90) { m =  90};
         if (m < -90) { m = -90};
-        if (n>3) {
+        if (n>7) {
             if (paddleX < canvas.width-paddleWidth) {
                 paddleX += 7;
             }
         }
-        if (n<-3) {
+        if (n<-7) {
             if (paddleX > 0) {
                 paddleX -= 7;
             }
@@ -168,7 +168,7 @@
     function drawScore() {
         ctx.font = "16px Arial";
         ctx.fillStyle = "#00dd37";
-        ctx.fillText("Score: "+score, 8, 90);
+        ctx.fillText("Score: "+score, 8, 20);
 
     }
     function draw() {
