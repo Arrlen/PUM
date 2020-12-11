@@ -12,7 +12,7 @@
     <button id="request">orientation permission</button>
 </div>
 <div>
-    <canvas id="myCanvas" width="600" height="800" style="border:1px solid #000000;">
+    <canvas id="myCanvas" width="600" height="800" >
         Your browser does not support the HTML canvas tag.
     </canvas>
 </div>
@@ -39,7 +39,7 @@
     permit.addEventListener( "click", permission );
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
-    ctx.scale(0.2, 0.2);
+    ctx.scale(0.3, 0.3);
     var ballRadius = 10;
     var x = canvas.width/2;
     var y = canvas.height-30;
