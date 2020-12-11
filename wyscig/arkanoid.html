@@ -184,10 +184,10 @@
     }
     if(isPortrait()){
         ctx.scale(1, 1);
-        Location.reload(true)
+        window.location.reload();
     }else{
         ctx.scale(0.25, 0.25);
-        Location.reload(true)
+        window.location.reload();
     }
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
