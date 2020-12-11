@@ -39,7 +39,6 @@
     permit.addEventListener( "click", permission );
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
-
     var ballRadius = 10;
     var x = canvas.width/2;
     var y = canvas.height-30;
@@ -161,7 +160,6 @@
 
 
         }else
-            ctx.scale(0.25, 0.25);
         if (m>3) {
             if (paddleX < canvas.width-paddleWidth) {
                 paddleX += 7;
