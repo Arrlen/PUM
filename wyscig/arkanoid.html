@@ -71,7 +71,12 @@
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
 
-
+    function isPortrait() {
+        return window.innerHeight > window.innerWidth;
+    }
+    function isLandscape() {
+        return (window.orientation === 90 || window.orientation === -90);
+    }
     function keyDownHandler(e) {
         if(e.key == "Right" || e.key == "ArrowRight") {
             rightPressed = true;
@@ -144,7 +149,7 @@
     function handleOrientation(event) {
         var m = event.beta;  // In degree in the range [-180,180]
         var n = event.gamma; // In degree in the range [-90,90]
-        if(n>90){
+        if(isLandscape()){
             ctx.scale(0.25, 0.25);
             if (m>3) {
                 if (paddleX < canvas.width-paddleWidth) {
