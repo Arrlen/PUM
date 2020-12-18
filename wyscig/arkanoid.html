@@ -12,7 +12,7 @@
     <button id="request">orientation permission</button>
 </div>
 <div>
-    <canvas id="myCanvas" width="600" height="800" >
+    <canvas id="myCanvas">
         Your browser does not support the HTML canvas tag.
     </canvas>
 </div>
@@ -26,13 +26,20 @@
         if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
             DeviceMotionEvent.requestPermission()
                 .then( response => {
-                    if ( response === "granted" ) {
-                        window.addEventListener("deviceorientation", handleOrientation, true);
-                    }
+                    if (response === "granted") {
+                        if (window.innerWidth > window.innerHeight) {
+                            window.addEventListener("deviceorientation", handleOrientationHorizontal, true);
+                        } else {
+                            window.addEventListener("deviceorientation", handleOrientation, true);
+                        }}
                 })
                 .catch( console.error )
         } else {
-            alert( "DeviceMotionEvent is not defined" );
+            if (window.innerWidth > window.innerHeight) {
+                window.addEventListener("deviceorientation", handleOrientationHorizontal, true);
+            } else {
+                window.addEventListener("deviceorientation", handleOrientation, true);
+            }
         }
     }
     const permit = document.getElementById( "request" );
@@ -40,25 +47,28 @@
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
     var ballRadius = 10;
-    var x = canvas.width/2;
-    var y = canvas.height-30;
-    var dx = 2;
-    var dy = -5;
+    canvas.width = innerWidth - 20;
+    canvas.height = innerHeight - 50;
+    var x = canvas.width / 2;
+    var y = (canvas.height / 3) * 2;
+    var dx=-3;
+    var dy=3;
     var paddleHeight = 10;
     var paddleWidth = 170;
-    var paddleX = (canvas.width-paddleWidth)/2;
+    var paddleX = (canvas.width / 2) - (paddleWidth / 2);
+    var paddleY = canvas.height - paddleHeight;
     var rightPressed = false;
     var leftPressed = false;
-    var brickRowCount = 6;
-    var brickColumnCount = 8;
     var brickWidth = 75;
     var brickHeight = 20;
     var brickPadding = 10;
     var brickOffsetTop = 30;
     var brickOffsetLeft = 45;
+    var brickRowCount = Math.floor((canvas.height / brickHeight) / 2);
+    var brickColumnCount = Math.floor(canvas.width / brickWidth)/2;
     var score = 0;
     var lives = 1;
-
+    var angle=0;
     var bricks = [];
     for(var c=0; c<brickColumnCount; c++) {
         bricks[c] = [];
@@ -70,9 +80,6 @@
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
 
-    function isPortrait() {
-        return window.innerHeight > window.innerWidth;
-    }
 
     function keyDownHandler(e) {
         if(e.key == "Right" || e.key == "ArrowRight") {
@@ -121,7 +128,7 @@
     }
     function drawPaddle() {
         ctx.beginPath();
-        ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+        ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
         ctx.fillStyle = "#00dd37";
         ctx.fill();
         ctx.closePath();
@@ -146,7 +153,7 @@
     function handleOrientation(event) {
         var m = event.beta;  // In degree in the range [-180,180]
         var n = event.gamma; // In degree in the range [-90,90]+
-        if(isPortrait()){
+
             if (n>3) {
                 if (paddleX < canvas.width-paddleWidth) {
                     paddleX += 7;
@@ -159,7 +166,13 @@
             }
 
 
-        }else
+        m += 90;
+        n += 90;
+
+    }
+    function handleOrientationHorizontal(event) {
+        var m = event.beta;  // In degree in the range [-180,180]
+        var n = event.gamma; // In degree in the range [-90,90]+
         if (m>3) {
             if (paddleX < canvas.width-paddleWidth) {
                 paddleX += 7;
@@ -175,17 +188,11 @@
         n += 90;
 
     }
-    window.addEventListener('deviceorientation', handleOrientation);
     function drawScore() {
         ctx.font = "16px Arial";
         ctx.fillStyle = "#00dd37";
         ctx.fillText("Score: "+score, 8, 20);
 
-    }
-    if(isPortrait()){
-        ctx.scale(1, 1);
-    }else{
-        ctx.scale(0.25, 0.25);
     }
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -201,9 +208,13 @@
         if(y + dy < ballRadius) {
             dy = -dy;
         }
-        else if(y + dy > canvas.height-ballRadius) {
-            if(x > paddleX && x < paddleX + paddleWidth) {
-                dy = -dy;
+        else if(y + dy > paddleY-ballRadius) {
+            if(x+ballRadius > paddleX && x -ballRadius < paddleX + paddleWidth) {
+                if(y=y-paddleHeight){
+                    angle=((paddleX+paddleWidth/2)-x)*0.05;
+                    dx=dx+angle;
+                    dy=-dy;
+                }
             }
             else {
                 lives--;
