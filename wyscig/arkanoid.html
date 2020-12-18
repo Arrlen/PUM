@@ -27,7 +27,6 @@
             DeviceMotionEvent.requestPermission()
                 .then( response => {
                     if (response === "granted") {
-                        start=1;
                         if (window.innerWidth > window.innerHeight) {
                             window.addEventListener("deviceorientation", handleOrientationHorizontal, true);
                         } else {
@@ -43,7 +42,6 @@
             }
         }
     }
-    var start=0;
     const permit = document.getElementById( "request" );
     permit.addEventListener( "click", permission );
     var canvas = document.getElementById("myCanvas");
@@ -196,54 +194,57 @@
         ctx.fillText("Score: "+score, 8, 20);
 
     }
-    if (start == 1) {
     function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBricks();
-            drawBall();
-            drawPaddle();
-            drawScore();
-            collisionDetection();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBricks();
+        drawBall();
+        drawPaddle();
+        drawScore();
+        collisionDetection();
 
-            if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-                dx = -dx;
-            }
-            if (y + dy < ballRadius) {
-                dy = -dy;
-            } else if (y + dy > paddleY - ballRadius) {
-                if (x + ballRadius > paddleX && x - ballRadius < paddleX + paddleWidth) {
-                    if (y = y - paddleHeight) {
-                        angle = ((paddleX + paddleWidth / 2) - x) * 0.05;
-                        dx = dx + angle;
-                        dy = -dy;
-                    }
-                } else {
-                    lives--;
-                    if (!lives) {
-                        alert("YOU LOSE");
-                        document.location.reload();
-                    } else {
-                        x = canvas.width / 2;
-                        y = canvas.height - 30;
-                        dx = 3;
-                        dy = -3;
-                        paddleX = (canvas.width - paddleWidth) / 2;
-                    }
+        if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+            dx = -dx;
+        }
+        if(y + dy < ballRadius) {
+            dy = -dy;
+        }
+        else if(y + dy > paddleY-ballRadius) {
+            if(x+ballRadius > paddleX && x -ballRadius < paddleX + paddleWidth) {
+                if(y=y-paddleHeight){
+                    angle=((paddleX+paddleWidth/2)-x)*0.05;
+                    dx=dx+angle;
+                    dy=-dy;
                 }
             }
-
-            if (rightPressed && paddleX < canvas.width - paddleWidth) {
-                paddleX += 7;
-            } else if (leftPressed && paddleX > 0) {
-                paddleX -= 7;
+            else {
+                lives--;
+                if(!lives) {
+                    alert("YOU LOSE");
+                    document.location.reload();
+                }
+                else {
+                    x = canvas.width/2;
+                    y = canvas.height-30;
+                    dx = 3;
+                    dy = -3;
+                    paddleX = (canvas.width-paddleWidth)/2;
+                }
             }
-
-            x += dx;
-            y += dy;
-            requestAnimationFrame(draw);
         }
-        draw();
+
+        if(rightPressed && paddleX < canvas.width-paddleWidth) {
+            paddleX += 7;
+        }
+        else if(leftPressed && paddleX > 0) {
+            paddleX -= 7;
+        }
+
+        x += dx;
+        y += dy;
+        requestAnimationFrame(draw);
     }
+
+    draw();
 </script>
 </canvas>
 </body>
