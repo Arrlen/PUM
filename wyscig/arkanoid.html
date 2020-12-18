@@ -31,7 +31,10 @@
                             window.addEventListener("deviceorientation", handleOrientationHorizontal, true);
                         } else {
                             window.addEventListener("deviceorientation", handleOrientation, true);
-                        }}
+                        }
+                        dx=-3;
+                        dy=3;
+                    }
                 })
                 .catch( console.error )
         } else {
@@ -41,6 +44,8 @@
                 window.addEventListener("deviceorientation", handleOrientation, true);
             }
         }
+        dx=-3;
+        dy=3;
     }
     const permit = document.getElementById( "request" );
     permit.addEventListener( "click", permission );
@@ -51,8 +56,8 @@
     canvas.height = innerHeight - 50;
     var x = canvas.width / 2;
     var y = (canvas.height / 3) * 2;
-    var dx=-3;
-    var dy=3;
+    var dx=0;
+    var dy=0;
     var paddleHeight = 10;
     var paddleWidth = 170;
     var paddleX = (canvas.width / 2) - (paddleWidth / 2);
