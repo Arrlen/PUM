@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Labirynt</title>
+    <style>
+        * {
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+<button id="request">Start</button>
+<canvas id="canvas" width="800" style="height: 90%;border:1px solid #000000"></canvas>
+<script>
+    const canvas = document.getElementById("canvas")
+    const ctx = canvas.getContext("2d")
+    const tileSize = 50;
+    const ballSize = 25;
+    let ballX = -1;
+    let ballY = -1;
+    const playerSpeed = 3;
+    canvas.height = innerHeight - 80;
+    canvas.width = innerWidth - 30;
+    canvas.height -= canvas.height % tileSize;
+    canvas.width -= canvas.width % tileSize;
+    const button = document.getElementById("request")
+    button.addEventListener("click", permissionsClick)
+    function permissionsClick() {
+        if (typeof (DeviceMotionEvent) !== "undefined" && typeof (DeviceMotionEvent.requestPermission) === "function") {
+            DeviceMotionEvent.requestPermission()
+                .then(response => {
+                    if (response === "granted") {
+                        if (window.innerWidth > window.innerHeight) {
+                            window.addEventListener("deviceorientation", handleOrientationHorizontal, true);
+                        } else {
+                            window.addEventListener("deviceorientation", handleOrientation, true);
+                        }
+                    }
+                })
+                .catch(console.error)
+        } else {
+            if (window.innerWidth > window.innerHeight) {
+                window.addEventListener("deviceorientation", handleOrientationHorizontal, true);
+            } else {
+                window.addEventListener("deviceorientation", handleOrientation, true);
+            }
+        }
+        draw()
+    }
+    let rightPressed = false
+    let leftPressed = false
+    let upPressed = false
+    let downPressed = false
+    const emptyField = 0;
+    const wallField = 1;
+    const winField = 2;
+    const startField = 3;
+    let labirynth = generateLevel(canvas.width / 50, canvas.height / 50);
+    function handleOrientation(event) {
+        if (event.gamma >= -10 && event.gamma <= 10) {
+            handleLeftEnd();
+            handleRightEnd();
+        } else if (event.gamma < -10) {
+            handleRightEnd();
+            handleLeftStart();
+        } else if (event.gamma > 10) {
+            handleLeftEnd();
+            handleRightStart();
+        }
+        if (event.beta >= -10 && event.beta <= 10) {
+            handleDownEnd();
+            handleUpEnd();
+        } else if (event.beta < -10) {
+            handleDownEnd();
+            handleUpStart();
+        } else if (event.beta > 10) {
+            handleUpEnd();
+            handleDownStart();
+        }
+    }
+    function handleOrientationHorizontal(event) {
+        if (event.beta >= -10 && event.beta <= 10) {
+            handleLeftEnd();
+            handleRightEnd();
+        } else if (event.beta < -10) {
+            handleRightEnd();
+            handleLeftStart();
+        } else if (event.beta > 10) {
+            handleLeftEnd();
+            handleRightStart();
+        }
+        if (event.gamma >= -10 && event.gamma <= 10) {
+            handleUpEnd();
+            handleDownEnd();
+        } else if (event.gamma < -10) {
+            handleUpEnd();
+            handleDownStart();
+        } else if (event.gamma > 10) {
+            handleDownEnd();
+            handleUpStart();
+        }
+    }
+
+    function generateLevel(width, height) {
+        const pathField = 4;
+        let array = [];
+        for (let i = 0; i < width; i++) {
+            array.push([]);
+            for (let j = 0; j < height; j++) {
+                array[i].push(emptyField);
+            }
+        }
+
+        let startX = Math.floor(Math.random() * width);
+        let startY = Math.floor(Math.random() * height);
+        array[startX][startY] = startField;
+        ballX = startX * tileSize + tileSize / 2;
+        ballY = startY * tileSize + tileSize / 2;
+        let winX = startX;
+        let winY = startY;
+        while (winX === startX && winY === startY) {
+            winX = Math.floor(Math.random() * width);
+            winY = Math.floor(Math.random() * height);
+        }
+
+        array[winX][winY] = winField;
+        let directionalX = 1;
+        let directionalY = 1;
+        if (winX < startX) {
+            directionalX = -1;
+        }
+        if (winY < startY) {
+            directionalY = -1;
+        }
+        let pathX = startX;
+        let pathY = startY;
+        while (true) {
+            if (pathY === winY || (pathX !== winX && Math.random() > 0.5)) {
+                pathX += directionalX;
+            } else if (pathY !== winY) {
+                pathY += directionalY;
+            }
+            if (pathX === winX && pathY === winY) {
+                break;
+            }
+            array[pathX][pathY] = pathField;
+        }
+
+        for (let i = 0; i < width; i++) {
+            for (let j = 0; j < height; j++) {
+                if (array[i][j] === emptyField) {
+                    array[i][j] = (Math.random() > 0.5) ? wallField : emptyField;
+                }
+            }
+        }
+        for (let i = 0; i < width; i++) {
+            console.log(array[i]);
+            for (let j = 0; j < height; j++) {
+                if (array[i][j] === pathField) {
+                    array[i][j] = emptyField;
+                }
+            }
+        }
+        return array;
+    }
+    function fill() {
+        for (let i = 0; i < labirynth.length; i++) {
+            for (let j = 0; j < labirynth[i].length; j++) {
+                ctx.beginPath()
+                ctx.rect(i * tileSize, j * tileSize, tileSize, tileSize);
+                if (labirynth[i][j] === winField) {
+                    ctx.fillStyle = "#00aa00";
+                } else if (labirynth[i][j] === wallField) {
+                    ctx.fillStyle = "#030303";
+                } else {
+                    ctx.fillStyle = "#BBBBBB";
+                }
+                ctx.fill()
+                ctx.closePath()
+            }
+        }
+        drawPlayer();
+    }
+    function drawPlayer() {
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, ballSize / 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "#440270";
+        ctx.fill();
+        ctx.closePath();
+    }
+    function checkPotentialCollision(direction) {
+        if (direction === "down") {
+            if (ballY + ballSize / 2 + playerSpeed > canvas.height) {
+                return true;
+            }
+            for (let i = 0; i < labirynth.length; i++) {
+                for (let j = 0; j < labirynth[i].length; j++) {
+                    if (labirynth[i][j] === wallField) {
+                        if ((i * tileSize < ballX + ballSize / 2 &&
+                            (1 + i) * tileSize > ballX - ballSize / 2 &&
+                            j * tileSize < ballY + ballSize / 2 + playerSpeed &&
+                            (1 + j) * tileSize > ballY - ballSize / 2)) {
+                            console.log("Collision on " + i + "x" + j)
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        if (direction === "up") {
+            if (ballY - ballSize / 2 - playerSpeed <= 0) {
+                return true;
+            }
+            for (let i = 0; i < labirynth.length; i++) {
+                for (let j = 0; j < labirynth[i].length; j++) {
+                    if (labirynth[i][j] === wallField) {
+                        if ((i * tileSize < ballX + ballSize / 2 &&
+                            (1 + i) * tileSize > ballX - ballSize / 2 &&
+                            j * tileSize < ballY + ballSize / 2 &&
+                            (1 + j) * tileSize > ballY - ballSize / 2 - playerSpeed)) {
+                            console.log("Collision on " + i + "x" + j)
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        if (direction === "left") {
+            if (ballX - ballSize / 2 - playerSpeed <= 0) {
+                return true;
+            }
+            for (let i = 0; i < labirynth.length; i++) {
+                for (let j = 0; j < labirynth[i].length; j++) {
+                    if (labirynth[i][j] === wallField) {
+                        if ((i * tileSize < ballX + ballSize / 2 &&
+                            (1 + i) * tileSize > ballX - ballSize / 2 - playerSpeed &&
+                            j * tileSize < ballY + ballSize / 2 &&
+                            (1 + j) * tileSize > ballY - ballSize / 2)) {
+                            console.log("Collision on " + i + "x" + j)
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        if (direction === "right") {
+            if (ballX + ballSize / 2 + playerSpeed > canvas.width) {
+                return true;
+            }
+            for (let i = 0; i < labirynth.length; i++) {
+                for (let j = 0; j < labirynth[i].length; j++) {
+                    if (labirynth[i][j] === wallField) {
+                        if ((i * tileSize < ballX + ballSize / 2 + playerSpeed &&
+                            (1 + i) * tileSize > ballX - ballSize / 2 &&
+                            j * tileSize < ballY + ballSize / 2 &&
+                            (1 + j) * tileSize > ballY - ballSize / 2)) {
+                            console.log("Collision on " + i + "x" + j)
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+    function checkWin() {
+        for (let i = 0; i < labirynth.length; i++) {
+            for (let j = 0; j < labirynth[i].length; j++) {
+                if (labirynth[i][j] === winField) {
+                    if ((i * tileSize < ballX + ballSize / 2 + playerSpeed &&
+                        (1 + i) * tileSize > ballX - ballSize / 2 &&
+                        j * tileSize < ballY + ballSize / 2 &&
+                        (1 + j) * tileSize > ballY - ballSize / 2)) {
+                        console.log("Win on " + i + "x" + j)
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        fill();
+        if (checkWin()) {
+            alert("WIN");
+            labirynth = generateLevel(canvas.width / 50, canvas.height / 50);
+            upPressed = false;
+            downPressed = false;
+            leftPressed = false;
+            rightPressed = false;
+        }
+        if (leftPressed && !checkPotentialCollision("left")) {
+            ballX -= playerSpeed;
+        }
+        if (rightPressed && !checkPotentialCollision("right")) {
+            ballX += playerSpeed;
+        }
+
+        if (upPressed && !checkPotentialCollision("up")) {
+            ballY -= playerSpeed;
+        }
+
+        if (downPressed && !checkPotentialCollision("down")) {
+            ballY += playerSpeed;
+        }
+        window.requestAnimationFrame(draw);
+    }
+
+    function handleUpStart() {
+        upPressed = true
+    }
+
+    function handleUpEnd() {
+        upPressed = false
+    }
+
+    function handleDownStart() {
+        downPressed = true
+    }
+
+    function handleDownEnd() {
+        downPressed = false
+    }
+
+    function handleLeftStart() {
+        leftPressed = true
+    }
+
+    function handleLeftEnd() {
+        leftPressed = false
+    }
+
+    function handleRightStart() {
+        rightPressed = true
+    }
+
+    function handleRightEnd() {
+        rightPressed = false
+    }
+
+
+    fill();
+</script>
+</body>
+</html>
